@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String    @unique
   emailVerified DateTime?
   passwordHash  String?
   image         String?
   accounts      Account[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model Account {
   userId            String
   type              String
@@ -32,12 +32,12 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
 
@@ -54,4 +54,64 @@ model Token {
 enum TokenType {
   VERIFICATION
   PASSWORD_RESET
+}
+
+model Company {
+   @@map("company")
+
+  CompanyName                String @map("companyname")
+  CompanyNumber              String @id @default(cuid()) @map("companynumber")
+  CareOf                     String @map("careof")
+  POBox                      String @map("pobox")
+  AddressLine1               String @map("addressline1")
+  AddressLine2               String @map("addressline2")
+  PostTown                   String @map("posttown")
+  County                     String @map("county")
+  Country                    String @map("country")
+  PostCode                   String @map("postcode")
+  CompanyCategory            String @map("companycategory")
+  CompanyStatus              String @map("companystatus")
+  CountryOfOrigin            String @map("countryoforigin")
+  DissolutionDate            String @map("dissolutiondate")
+  IncorporationDate          String @map("incorporationdate")
+  AccountRefDay              String @map("accountrefday")
+  AccountRefMonth            String @map("accountrefmonth")
+  AccountsNextDueDate        String @map("accountsnextduedate")
+  AccountsLastMadeUpDate     String @map("accountslastmadeupdate")
+  AccountsAccountCategory    String @map("accountsaccountcategory")
+  ReturnsNextDueDate         String @map("returnsnextduedate")
+  ReturnsLastMadeUpDate      String @map("returnslastmadeupdate")
+  NumMortCharges             String @map("nummortcharges")
+  NumMortOutstanding         String @map("nummortoutstanding")
+  NumMortPartSatisfied       String @map("nummortpartsatisfied")
+  NumMortSatisfied           String @map("nummortsatisfied")
+  SicText_1                  String @map("sictext_1")
+  SicText_2                  String @map("sictext_2")
+  SicText_3                  String @map("sictext_3")
+  SicText_4                  String @map("sictext_4")
+  NumGenPartners             String @map("numgenpartners")
+  NumLimPartners             String @map("numlimpartners")
+  URI                        String @map("uri")
+  PreviousName_1CONDATE      String @map("previousname_1condate")
+  PreviousName_1CompanyName  String @map("previousname_1companyname")
+  PreviousName_2CONDATE      String @map("previousname_2condate")
+  PreviousName_2CompanyName  String @map("previousname_2companyname")
+  PreviousName_3CONDATE      String @map("previousname_3condate")
+  PreviousName_3CompanyName  String @map("previousname_3companyname")
+  PreviousName_4CONDATE      String @map("previousname_4condate")
+  PreviousName_4CompanyName  String @map("previousname_4companyname")
+  PreviousName_5CONDATE      String @map("previousname_5condate")
+  PreviousName_5CompanyName  String @map("previousname_5companyname")
+  PreviousName_6CONDATE      String @map("previousname_6condate")
+  PreviousName_6CompanyName  String @map("previousname_6companyname")
+  PreviousName_7CONDATE      String @map("previousname_7condate")
+  PreviousName_7CompanyName  String @map("previousname_7companyname")
+  PreviousName_8CONDATE      String @map("previousname_8condate")
+  PreviousName_8CompanyName  String @map("previousname_8companyname")
+  PreviousName_9CONDATE      String @map("previousname_9condate")
+  PreviousName_9CompanyName  String @map("previousname_9companyname")
+  PreviousName_10CONDATE     String @map("previousname_10condate")
+  PreviousName_10CompanyName String @map("previousname_10companyname")
+  ConfStmtNextDueDate        String @map("confstmtnextduedate")
+  ConfStmtLastMadeUpDate     String @map("confstmtlastmadeupdate")
 }
