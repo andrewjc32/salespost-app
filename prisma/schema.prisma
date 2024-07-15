@@ -7,19 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  passwordHash  String?
-  image         String?
-  accounts      Account[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Account {
   userId            String
   type              String
@@ -32,13 +19,47 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime?
+  accounts      Account[]
+
+  @@map("users")
+}
+
+model companystatus {
+  status_id                                        Int         @id @default(autoincrement())
+  status                                           String?
+  companies_companies_companystatusTocompanystatus companies[] @relation("companies_companystatusTocompanystatus")
+
+  @@map("companystatus")
+}
+
+model sic_codes {
+  sic_id                              Int         @id
+  sic_section_name                    String?
+  sic_section_id                      String?
+  sic_text                            String?
+  companies_companies_sic1Tosic_codes companies[] @relation("companies_sic1Tosic_codes")
+  companies_companies_sic2Tosic_codes companies[] @relation("companies_sic2Tosic_codes")
+  companies_companies_sic3Tosic_codes companies[] @relation("companies_sic3Tosic_codes")
+  companies_companies_sic4Tosic_codes companies[] @relation("companies_sic4Tosic_codes")
+
+  @@map("sic_codes")
 }
 
 model Token {
@@ -49,69 +70,74 @@ model Token {
   type    TokenType
 
   @@unique([email, token])
+  @@map("tokens")
+}
+
+model companies {
+  id                                                   Int            @id @default(autoincrement())
+  companyname                                          String?
+  companynumber                                        String?
+  careof                                               String?
+  pobox                                                String?
+  addressline1                                         String?
+  addressline2                                         String?
+  posttown                                             String?
+  county                                               String?
+  country                                              String?
+  postcode                                             String?
+  companycategory                                      String?
+  companystatus                                        Int?
+  countryoforigin                                      String?
+  dissolutiondate                                      DateTime?      @db.Timestamp(6)
+  incorporationdate                                    DateTime?      @db.Timestamp(6)
+  accountrefday                                        Int?
+  accountrefmonth                                      Int?
+  accountsnextduedate                                  DateTime?      @db.Timestamp(6)
+  accountslastmadeupdate                               DateTime?      @db.Timestamp(6)
+  accountscategory                                     String?
+  returnslastmadeupdate                                DateTime?      @db.Timestamp(6)
+  returnsnextduedate                                   DateTime?      @db.Timestamp(6)
+  nummortcharges                                       Int?
+  nummortoutstanding                                   Int?
+  nummortpartsatisfied                                 Int?
+  nummortsatisfied                                     Int?
+  sic1                                                 Int?
+  sic2                                                 Int?
+  sic3                                                 Int?
+  sic4                                                 Int?
+  numgenpartners                                       Int?
+  numlimpartners                                       Int?
+  uri                                                  String?
+  previousname_1condate                                DateTime?      @db.Timestamp(6)
+  previousname_1companyname                            String?
+  previousname_2condate                                DateTime?      @db.Timestamp(6)
+  previousname_2companyname                            String?
+  previousname_3condate                                DateTime?      @db.Timestamp(6)
+  previousname_3companyname                            String?
+  previousname_4condate                                DateTime?      @db.Timestamp(6)
+  previousname_4companyname                            String?
+  previousname_5condate                                DateTime?      @db.Timestamp(6)
+  previousname_5companyname                            String?
+  previousname_6condate                                DateTime?      @db.Timestamp(6)
+  previousname_6companyname                            String?
+  previousname_7condate                                DateTime?      @db.Timestamp(6)
+  previousname_7companyname                            String?
+  previousname_8condate                                DateTime?      @db.Timestamp(6)
+  previousname_8companyname                            String?
+  previousname_9condate                                DateTime?      @db.Timestamp(6)
+  previousname_9companyname                            String?
+  previousname_10condate                               DateTime?      @db.Timestamp(6)
+  previousname_10companyname                           String?
+  confstmtlastduedate                                  DateTime?      @db.Timestamp(6)
+  confstmtlastmadeupdate                               DateTime?      @db.Timestamp(6)
+  companystatus_companies_companystatusTocompanystatus companystatus? @relation("companies_companystatusTocompanystatus", fields: [companystatus], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic1Tosic_codes                  sic_codes?     @relation("companies_sic1Tosic_codes", fields: [sic1], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic2Tosic_codes                  sic_codes?     @relation("companies_sic2Tosic_codes", fields: [sic2], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic3Tosic_codes                  sic_codes?     @relation("companies_sic3Tosic_codes", fields: [sic3], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic4Tosic_codes                  sic_codes?     @relation("companies_sic4Tosic_codes", fields: [sic4], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum TokenType {
   VERIFICATION
   PASSWORD_RESET
-}
-
-model Company {
-   @@map("company")
-
-  CompanyName                String @map("companyname")
-  CompanyNumber              String @id @default(cuid()) @map("companynumber")
-  CareOf                     String @map("careof")
-  POBox                      String @map("pobox")
-  AddressLine1               String @map("addressline1")
-  AddressLine2               String @map("addressline2")
-  PostTown                   String @map("posttown")
-  County                     String @map("county")
-  Country                    String @map("country")
-  PostCode                   String @map("postcode")
-  CompanyCategory            String @map("companycategory")
-  CompanyStatus              String @map("companystatus")
-  CountryOfOrigin            String @map("countryoforigin")
-  DissolutionDate            String @map("dissolutiondate")
-  IncorporationDate          String @map("incorporationdate")
-  AccountRefDay              String @map("accountrefday")
-  AccountRefMonth            String @map("accountrefmonth")
-  AccountsNextDueDate        String @map("accountsnextduedate")
-  AccountsLastMadeUpDate     String @map("accountslastmadeupdate")
-  AccountsAccountCategory    String @map("accountsaccountcategory")
-  ReturnsNextDueDate         String @map("returnsnextduedate")
-  ReturnsLastMadeUpDate      String @map("returnslastmadeupdate")
-  NumMortCharges             String @map("nummortcharges")
-  NumMortOutstanding         String @map("nummortoutstanding")
-  NumMortPartSatisfied       String @map("nummortpartsatisfied")
-  NumMortSatisfied           String @map("nummortsatisfied")
-  SicText_1                  String @map("sictext_1")
-  SicText_2                  String @map("sictext_2")
-  SicText_3                  String @map("sictext_3")
-  SicText_4                  String @map("sictext_4")
-  NumGenPartners             String @map("numgenpartners")
-  NumLimPartners             String @map("numlimpartners")
-  URI                        String @map("uri")
-  PreviousName_1CONDATE      String @map("previousname_1condate")
-  PreviousName_1CompanyName  String @map("previousname_1companyname")
-  PreviousName_2CONDATE      String @map("previousname_2condate")
-  PreviousName_2CompanyName  String @map("previousname_2companyname")
-  PreviousName_3CONDATE      String @map("previousname_3condate")
-  PreviousName_3CompanyName  String @map("previousname_3companyname")
-  PreviousName_4CONDATE      String @map("previousname_4condate")
-  PreviousName_4CompanyName  String @map("previousname_4companyname")
-  PreviousName_5CONDATE      String @map("previousname_5condate")
-  PreviousName_5CompanyName  String @map("previousname_5companyname")
-  PreviousName_6CONDATE      String @map("previousname_6condate")
-  PreviousName_6CompanyName  String @map("previousname_6companyname")
-  PreviousName_7CONDATE      String @map("previousname_7condate")
-  PreviousName_7CompanyName  String @map("previousname_7companyname")
-  PreviousName_8CONDATE      String @map("previousname_8condate")
-  PreviousName_8CompanyName  String @map("previousname_8companyname")
-  PreviousName_9CONDATE      String @map("previousname_9condate")
-  PreviousName_9CompanyName  String @map("previousname_9companyname")
-  PreviousName_10CONDATE     String @map("previousname_10condate")
-  PreviousName_10CompanyName String @map("previousname_10companyname")
-  ConfStmtNextDueDate        String @map("confstmtnextduedate")
-  ConfStmtLastMadeUpDate     String @map("confstmtlastmadeupdate")
 }

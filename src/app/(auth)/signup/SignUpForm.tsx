@@ -23,8 +23,6 @@ const SignUpForm = () => {
   const onSubmit = async (data: SignUpSchema) => {
     const result = await signUp(data);
 
-    console.log(result);
-
     if (result.status == "error") {
       if (Array.isArray(result.error)) {
         result.error.forEach((error) => {
