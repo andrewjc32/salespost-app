@@ -44,7 +44,7 @@ model User {
 model companystatus {
   status_id                                        Int         @id @default(autoincrement())
   status                                           String?
-  companies_companies_companystatusTocompanystatus companies[] @relation("companies_companystatusTocompanystatus")
+  companies_companies_companystatusTocompanystatus Company[] @relation("companies_companystatusTocompanystatus")
 
   @@map("companystatus")
 }
@@ -54,10 +54,10 @@ model sic_codes {
   sic_section_name                    String?
   sic_section_id                      String?
   sic_text                            String?
-  companies_companies_sic1Tosic_codes companies[] @relation("companies_sic1Tosic_codes")
-  companies_companies_sic2Tosic_codes companies[] @relation("companies_sic2Tosic_codes")
-  companies_companies_sic3Tosic_codes companies[] @relation("companies_sic3Tosic_codes")
-  companies_companies_sic4Tosic_codes companies[] @relation("companies_sic4Tosic_codes")
+  companies_companies_sic1Tosic_codes Company[] @relation("companies_sic1Tosic_codes")
+  companies_companies_sic2Tosic_codes Company[] @relation("companies_sic2Tosic_codes")
+  companies_companies_sic3Tosic_codes Company[] @relation("companies_sic3Tosic_codes")
+  companies_companies_sic4Tosic_codes Company[] @relation("companies_sic4Tosic_codes")
 
   @@map("sic_codes")
 }
@@ -73,7 +73,8 @@ model Token {
   @@map("tokens")
 }
 
-model companies {
+model Company {
+  @@map("companies")
   id                                                   Int            @id @default(autoincrement())
   companyname                                          String?
   companynumber                                        String?

@@ -12,7 +12,7 @@ import { signOutUser } from "@/actions/authActions";
 
 const NavMenu = () => {
   return (
-    <div className="flex md:order-2">
+    <>
       <Dropdown
         arrowIcon={false}
         inline
@@ -41,7 +41,7 @@ const NavMenu = () => {
         </DropdownItem>
       </Dropdown>
       <NavbarToggle />
-    </div>
+    </>
   );
 };
 
