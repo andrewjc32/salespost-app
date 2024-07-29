@@ -7,7 +7,7 @@ export async function sendVerifyEmail(email: string, token: string) {
     const link = `${baseUrl}/verify-email?token=${token}`;
 
     return resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'onboarding@noreply.salespost.co.uk',
         to: email,
         subject: 'Verify your email',
         html: `
@@ -22,7 +22,7 @@ export async function sendResetPassword(email: string, token: string) {
     const link = `${baseUrl}/reset-password?token=${token}`;
 
     return resend.emails.send({
-        from: 'onboarding@resend.dev',
+        from: 'onboarding@noreply.salespost.co.uk',
         to: email,
         subject: 'Reset your password',
         html: `
