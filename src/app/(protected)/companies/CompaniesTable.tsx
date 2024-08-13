@@ -19,7 +19,7 @@ import { useState, useEffect } from "react";
 import { getCompanies } from "@/actions/companiesActions";
 import Link from "next/link";
 import { FaEnvelope } from "react-icons/fa";
-import { Prisma, Company } from "@prisma/client";
+import { Prisma, companies } from "@prisma/client";
 
 type SortType = "asc" | "desc";
 
@@ -56,11 +56,11 @@ const CompaniesTable = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [filters, setFilters] = useState<Prisma.CompanyWhereInput>({});
+  const [filters, setFilters] = useState<Prisma.companiesWhereInput>({});
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: SortType;
-  }>({ key: "companyname", direction: "asc" });
+  }>({ key: "company_name", direction: "asc" });
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -85,11 +85,11 @@ const CompaniesTable = () => {
   }, [page, limit, filters, sortConfig]);
 
   const filterStatus = (active: boolean | null) => {
-    if (active) setFilters({ ...filters, dissolutiondate: null });
+    if (active) setFilters({ ...filters, dissolution_date: null });
     else if (active === false)
-      setFilters({ ...filters, dissolutiondate: { not: null } });
+      setFilters({ ...filters, dissolution_date: { not: null } });
     else {
-      const { dissolutiondate, ...restOfFilters } = filters;
+      const { dissolution_date, ...restOfFilters } = filters;
       setFilters(restOfFilters);
     }
   };
@@ -163,26 +163,26 @@ const CompaniesTable = () => {
                 <TableHead>
                   <TableHeadCell
                     className="px-2 py-3"
-                    onClick={() => requestSort("companyname")}
+                    onClick={() => requestSort("company_name")}
                   >
                     COMPANY NAME{" "}
-                    {sortConfig.key === "companyname" &&
+                    {sortConfig.key === "company_name" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
                     className="px-2 py-3"
-                    onClick={() => requestSort("incorporationdate")}
+                    onClick={() => requestSort("incorporation_date")}
                   >
                     REGISTRATION DATE{" "}
-                    {sortConfig.key === "incorporationdate" &&
+                    {sortConfig.key === "incorporation_date" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
                     className="px-2 py-3"
-                    onClick={() => requestSort("posttown")}
+                    onClick={() => requestSort("post_town")}
                   >
                     CITY{" "}
-                    {sortConfig.key === "posttown" &&
+                    {sortConfig.key === "post_town" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
@@ -316,26 +316,26 @@ const CompaniesTable = () => {
                 <TableHead>
                   <TableHeadCell
                     className="px-2 py-3 cursor-pointer"
-                    onClick={() => requestSort("companyname")}
+                    onClick={() => requestSort("company_name")}
                   >
                     COMPANY NAME{" "}
-                    {sortConfig.key === "companyname" &&
+                    {sortConfig.key === "company_name" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
                     className="px-2 py-3 cursor-pointer"
-                    onClick={() => requestSort("incorporationdate")}
+                    onClick={() => requestSort("incorporation_date")}
                   >
                     REGISTRATION DATE{" "}
-                    {sortConfig.key === "incorporationdate" &&
+                    {sortConfig.key === "incorporation_date" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
                     className="px-2 py-3 cursor-pointer"
-                    onClick={() => requestSort("posttown")}
+                    onClick={() => requestSort("post_town")}
                   >
                     CITY{" "}
-                    {sortConfig.key === "posttown" &&
+                    {sortConfig.key === "post_town" &&
                       (sortConfig.direction === "asc" ? "▲" : "▼")}
                   </TableHeadCell>
                   <TableHeadCell
@@ -374,13 +374,13 @@ const CompaniesTable = () => {
                       className="bg-white dark:border-gray-700 dark:bg-gray-800"
                     >
                       <TableCell className="whitespace-nowrap px-2 py-1 font-medium text-gray-900 dark:text-white">
-                        {company.companyname}
+                        {company.company_name}
                       </TableCell>
                       <TableCell className="px-2 py-1">
-                        {company.incorporationdate?.toLocaleDateString("en-GB")}
+                        {company.incorporation_date?.toLocaleDateString("en-GB")}
                       </TableCell>
                       <TableCell className="px-2 py-1">
-                        {company.posttown}
+                        {company.post_town}
                       </TableCell>
                       <TableCell className="px-2 py-1">
                         <Link

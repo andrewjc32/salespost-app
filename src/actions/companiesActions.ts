@@ -2,19 +2,19 @@
 
 import { prisma } from "@/lib/prisma";
 import { ActionResult } from "@/types";
-import { Prisma, Company } from '@prisma/client';
+import { Prisma, companies } from '@prisma/client';
 
 export async function getCompanies(
   skip: number = 0,
   take: number = 10,
-  filters: Prisma.CompanyWhereInput,
+  filters: Prisma.companiesWhereInput,
   sortConfig: any
 ) {
   try {
-    const whereCompany = Prisma.validator<Prisma.CompanyWhereInput>()({ ...filters });
+    const whereCompany = Prisma.validator<Prisma.companiesWhereInput>()({ ...filters });
     const orderBy = { [sortConfig.key]: sortConfig.direction };
 
-    const companies = await prisma.company.findMany({
+    const companies = await prisma.companies.findMany({
       orderBy,
       skip,
       take,
@@ -24,7 +24,7 @@ export async function getCompanies(
       }
     });
 
-    const total = await prisma.company.count({
+    const total = await prisma.companies.count({
       where: whereCompany
     });
 

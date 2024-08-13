@@ -30,7 +30,7 @@ model Account {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?    @unique
+  email         String?   @unique
   emailVerified DateTime?
   passwordHash  String?
   image         String?
@@ -39,27 +39,6 @@ model User {
   accounts      Account[]
 
   @@map("users")
-}
-
-model companystatus {
-  status_id                                        Int         @id @default(autoincrement())
-  status                                           String?
-  companies_companies_companystatusTocompanystatus Company[] @relation("companies_companystatusTocompanystatus")
-
-  @@map("companystatus")
-}
-
-model sic_codes {
-  sic_id                              Int         @id
-  sic_section_name                    String?
-  sic_section_id                      String?
-  sic_text                            String?
-  companies_companies_sic1Tosic_codes Company[] @relation("companies_sic1Tosic_codes")
-  companies_companies_sic2Tosic_codes Company[] @relation("companies_sic2Tosic_codes")
-  companies_companies_sic3Tosic_codes Company[] @relation("companies_sic3Tosic_codes")
-  companies_companies_sic4Tosic_codes Company[] @relation("companies_sic4Tosic_codes")
-
-  @@map("sic_codes")
 }
 
 model Token {
@@ -73,69 +52,124 @@ model Token {
   @@map("tokens")
 }
 
-model Company {
-  @@map("companies")
-  id                                                   Int            @id @default(autoincrement())
-  companyname                                          String?
-  companynumber                                        String?
-  careof                                               String?
-  pobox                                                String?
-  addressline1                                         String?
-  addressline2                                         String?
-  posttown                                             String?
-  county                                               String?
-  country                                              String?
-  postcode                                             String?
-  companycategory                                      String?
-  companystatus                                        Int?
-  countryoforigin                                      String?
-  dissolutiondate                                      DateTime?      @db.Timestamp(6)
-  incorporationdate                                    DateTime?      @db.Timestamp(6)
-  accountrefday                                        Int?
-  accountrefmonth                                      Int?
-  accountsnextduedate                                  DateTime?      @db.Timestamp(6)
-  accountslastmadeupdate                               DateTime?      @db.Timestamp(6)
-  accountscategory                                     String?
-  returnslastmadeupdate                                DateTime?      @db.Timestamp(6)
-  returnsnextduedate                                   DateTime?      @db.Timestamp(6)
-  nummortcharges                                       Int?
-  nummortoutstanding                                   Int?
-  nummortpartsatisfied                                 Int?
-  nummortsatisfied                                     Int?
-  sic1                                                 Int?
-  sic2                                                 Int?
-  sic3                                                 Int?
-  sic4                                                 Int?
-  numgenpartners                                       Int?
-  numlimpartners                                       Int?
-  uri                                                  String?
-  previousname_1condate                                DateTime?      @db.Timestamp(6)
-  previousname_1companyname                            String?
-  previousname_2condate                                DateTime?      @db.Timestamp(6)
-  previousname_2companyname                            String?
-  previousname_3condate                                DateTime?      @db.Timestamp(6)
-  previousname_3companyname                            String?
-  previousname_4condate                                DateTime?      @db.Timestamp(6)
-  previousname_4companyname                            String?
-  previousname_5condate                                DateTime?      @db.Timestamp(6)
-  previousname_5companyname                            String?
-  previousname_6condate                                DateTime?      @db.Timestamp(6)
-  previousname_6companyname                            String?
-  previousname_7condate                                DateTime?      @db.Timestamp(6)
-  previousname_7companyname                            String?
-  previousname_8condate                                DateTime?      @db.Timestamp(6)
-  previousname_8companyname                            String?
-  previousname_9condate                                DateTime?      @db.Timestamp(6)
-  previousname_9companyname                            String?
-  previousname_10condate                               DateTime?      @db.Timestamp(6)
-  previousname_10companyname                           String?
-  confstmtlastduedate                                  DateTime?      @db.Timestamp(6)
-  confstmtlastmadeupdate                               DateTime?      @db.Timestamp(6)
-  companystatus_companies_companystatusTocompanystatus companystatus? @relation("companies_companystatusTocompanystatus", fields: [companystatus], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic1Tosic_codes                  sic_codes?     @relation("companies_sic1Tosic_codes", fields: [sic1], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic2Tosic_codes                  sic_codes?     @relation("companies_sic2Tosic_codes", fields: [sic2], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic3Tosic_codes                  sic_codes?     @relation("companies_sic3Tosic_codes", fields: [sic3], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic4Tosic_codes                  sic_codes?     @relation("companies_sic4Tosic_codes", fields: [sic4], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+model appointment_date_origin {
+  id                           Int                            @id @default(autoincrement())
+  description                  String                         @db.VarChar(255)
+  company_officer_appointments company_officer_appointments[]
+}
+
+model appointment_type {
+  id                                                                                           Int                            @id @default(autoincrement())
+  value                                                                                        String                         @unique @db.Char(2)
+  description                                                                                  String                         @db.VarChar(100)
+  company_officer_appointments_company_officer_appointments_appointment_typeToappointment_type company_officer_appointments[] @relation("company_officer_appointments_appointment_typeToappointment_type")
+}
+
+model companies {
+  id                                  Int                      @id @default(autoincrement())
+  company_name                        String?
+  company_number                      String?                  @unique
+  care_of                             String?
+  po_box                              String?
+  address_line_1                      String?
+  address_line_2                      String?
+  post_town                           String?
+  county                              String?
+  country                             String?
+  post_code                           String?
+  company_category                    String?
+  company_status_id                   Int?
+  country_of_origin                   String?
+  dissolution_date                    DateTime?                @db.Timestamp(6)
+  incorporation_date                  DateTime?                @db.Timestamp(6)
+  account_ref_day                     Int?
+  account_ref_month                   Int?
+  accounts_next_due_date              DateTime?                @db.Timestamp(6)
+  accounts_last_made_up_date          DateTime?                @db.Timestamp(6)
+  accounts_category                   String?
+  returns_last_made_up_date           DateTime?                @db.Timestamp(6)
+  returns_next_due_date               DateTime?                @db.Timestamp(6)
+  num_mort_charges                    Int?
+  num_mort_outstanding                Int?
+  num_mort_part_satisfied             Int?
+  num_mort_satisfied                  Int?
+  sic1                                Int?
+  sic2                                Int?
+  sic3                                Int?
+  sic4                                Int?
+  num_gen_partners                    Int?
+  num_lim_partners                    Int?
+  uri                                 String?
+  conf_stmt_last_due_date             DateTime?                @db.Timestamp(6)
+  conf_stmt_last_made_up_date         DateTime?                @db.Timestamp(6)
+  company_status                      company_status?          @relation(fields: [company_status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic1Tosic_codes sic_codes?               @relation("companies_sic1Tosic_codes", fields: [sic1], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic2Tosic_codes sic_codes?               @relation("companies_sic2Tosic_codes", fields: [sic2], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic3Tosic_codes sic_codes?               @relation("companies_sic3Tosic_codes", fields: [sic3], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic4Tosic_codes sic_codes?               @relation("companies_sic4Tosic_codes", fields: [sic4], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  company_previous_names              company_previous_names[]
+}
+
+model company_officer_appointments {
+  id                                                                               Int                     @id @default(autoincrement())
+  company_number                                                                   String                  @db.VarChar(8)
+  app_date_origin                                                                  Int
+  appointment_type                                                                 Int
+  person_number                                                                    String                  @db.Char(12)
+  appointment_date                                                                 DateTime?               @db.Date
+  resignation_date                                                                 DateTime?               @db.Date
+  appointment_date_origin                                                          appointment_date_origin @relation(fields: [app_date_origin], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  appointment_type_company_officer_appointments_appointment_typeToappointment_type appointment_type        @relation("company_officer_appointments_appointment_typeToappointment_type", fields: [appointment_type], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  officers                                                                         officers                @relation(fields: [person_number], references: [person_number], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model company_previous_names {
+  id             Int        @id @default(autoincrement())
+  company_number String?
+  previous_name  String
+  change_date    DateTime   @db.Timestamp(6)
+  companies      companies? @relation(fields: [company_number], references: [company_number], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model company_status {
+  status_id Int         @id @default(autoincrement())
+  status    String?
+  companies companies[]
+}
+
+model officers {
+  id                           Int                            @id @default(autoincrement())
+  person_number                String                         @unique @db.Char(12)
+  corporate_indicator          Boolean?
+  person_postcode              String?                        @db.VarChar(10)
+  partial_date_of_birth        String?                        @db.VarChar(8)
+  full_date_of_birth           DateTime?                      @db.Date
+  title                        String?                        @db.VarChar(50)
+  forenames                    String?                        @db.VarChar(50)
+  surname                      String?                        @db.VarChar(160)
+  honours                      String?                        @db.VarChar(50)
+  care_of                      String?                        @db.VarChar(100)
+  po_box                       String?                        @db.VarChar(10)
+  address_line_1               String?                        @db.VarChar(251)
+  address_line_2               String?                        @db.VarChar(50)
+  post_town                    String?                        @db.VarChar(50)
+  county                       String?                        @db.VarChar(50)
+  country                      String?                        @db.VarChar(50)
+  occupation                   String?                        @db.VarChar(40)
+  nationality                  String?                        @db.VarChar(40)
+  usual_residential_country    String?                        @db.VarChar(160)
+  company_officer_appointments company_officer_appointments[]
+}
+
+model sic_codes {
+  sic_id                              Int         @id
+  sic_section_name                    String?
+  sic_section_id                      String?
+  sic_text                            String?
+  companies_companies_sic1Tosic_codes companies[] @relation("companies_sic1Tosic_codes")
+  companies_companies_sic2Tosic_codes companies[] @relation("companies_sic2Tosic_codes")
+  companies_companies_sic3Tosic_codes companies[] @relation("companies_sic3Tosic_codes")
+  companies_companies_sic4Tosic_codes companies[] @relation("companies_sic4Tosic_codes")
 }
 
 enum TokenType {

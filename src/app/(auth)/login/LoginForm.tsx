@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Checkbox, Label, TextInput } from "flowbite-react";
+import { Button, Card, Alert, Label, TextInput } from "flowbite-react";
 import { LoginSchema, loginSchema } from "@/lib/schemas/loginSchema";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { signInUser } from "@/actions/authActions";
 import SocialLogin from "./SocialLogin";
+import React, { useState } from "react";
+
 const LoginForm = () => {
   const router = useRouter();
   const {
@@ -18,14 +20,30 @@ const LoginForm = () => {
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
+  const [serverError, setServerError] = useState<string | null>(null);
 
   const onSubmit = async (data: LoginSchema) => {
     const result = await signInUser(data);
 
-    if (result.status === "success") {
-      router.push("/");
+    // if (result.status === "success") {
+    //   router.push("/");
+    // } else {
+    //   console.log(result.error);
+    // }
+    if (result.status == "error") {
+      if (Array.isArray(result.error)) {
+        result.error.forEach((error) => {
+          if (error.path) {
+            setServerError(`${error.path.join(".")} ${error.message}`);
+          } else {
+            setServerError(error.message);
+          }
+        });
+      } else {
+        setServerError(result.error as string);
+      }
     } else {
-      console.log(result.error);
+      router.push("/");
     }
   };
 
@@ -67,6 +85,7 @@ const LoginForm = () => {
             color={errors.password ? "failure" : "default"}
           />
         </div>
+        {serverError && <Alert color="failure">{serverError}</Alert>}
         <div className="flex mb-4">
           <Link
             href="/forgot-password"
