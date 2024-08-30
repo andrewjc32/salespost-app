@@ -8,7 +8,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session:{ strategy: 'jwt' },
   callbacks: {
     jwt: async({token}) => {
-      console.log('jwt callback', token)
       return token;
     },
     async session({ token, session }) {

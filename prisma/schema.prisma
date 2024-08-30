@@ -66,9 +66,9 @@ model appointment_type {
 }
 
 model companies {
-  id                                  Int                      @id @default(autoincrement())
+  id                                  Int                            @id @default(autoincrement())
   company_name                        String?
-  company_number                      String?                  @unique
+  company_number                      String?                        @unique
   care_of                             String?
   po_box                              String?
   address_line_1                      String?
@@ -80,15 +80,15 @@ model companies {
   company_category                    String?
   company_status_id                   Int?
   country_of_origin                   String?
-  dissolution_date                    DateTime?                @db.Timestamp(6)
-  incorporation_date                  DateTime?                @db.Timestamp(6)
+  dissolution_date                    DateTime?                      @db.Timestamp(6)
+  incorporation_date                  DateTime?                      @db.Timestamp(6)
   account_ref_day                     Int?
   account_ref_month                   Int?
-  accounts_next_due_date              DateTime?                @db.Timestamp(6)
-  accounts_last_made_up_date          DateTime?                @db.Timestamp(6)
+  accounts_next_due_date              DateTime?                      @db.Timestamp(6)
+  accounts_last_made_up_date          DateTime?                      @db.Timestamp(6)
   accounts_category                   String?
-  returns_last_made_up_date           DateTime?                @db.Timestamp(6)
-  returns_next_due_date               DateTime?                @db.Timestamp(6)
+  returns_last_made_up_date           DateTime?                      @db.Timestamp(6)
+  returns_next_due_date               DateTime?                      @db.Timestamp(6)
   num_mort_charges                    Int?
   num_mort_outstanding                Int?
   num_mort_part_satisfied             Int?
@@ -100,14 +100,18 @@ model companies {
   num_gen_partners                    Int?
   num_lim_partners                    Int?
   uri                                 String?
-  conf_stmt_last_due_date             DateTime?                @db.Timestamp(6)
-  conf_stmt_last_made_up_date         DateTime?                @db.Timestamp(6)
-  company_status                      company_status?          @relation(fields: [company_status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic1Tosic_codes sic_codes?               @relation("companies_sic1Tosic_codes", fields: [sic1], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic2Tosic_codes sic_codes?               @relation("companies_sic2Tosic_codes", fields: [sic2], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic3Tosic_codes sic_codes?               @relation("companies_sic3Tosic_codes", fields: [sic3], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
-  sic_codes_companies_sic4Tosic_codes sic_codes?               @relation("companies_sic4Tosic_codes", fields: [sic4], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  conf_stmt_last_due_date             DateTime?                      @db.Timestamp(6)
+  conf_stmt_last_made_up_date         DateTime?                      @db.Timestamp(6)
+  company_status                      company_status?                @relation(fields: [company_status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic1Tosic_codes sic_codes?                     @relation("companies_sic1Tosic_codes", fields: [sic1], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic2Tosic_codes sic_codes?                     @relation("companies_sic2Tosic_codes", fields: [sic2], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic3Tosic_codes sic_codes?                     @relation("companies_sic3Tosic_codes", fields: [sic3], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  sic_codes_companies_sic4Tosic_codes sic_codes?                     @relation("companies_sic4Tosic_codes", fields: [sic4], references: [sic_id], onDelete: NoAction, onUpdate: NoAction)
+  company_officer_appointments        company_officer_appointments[]
   company_previous_names              company_previous_names[]
+
+  @@index([company_name], map: "idx_company_name")
+  @@index([company_name, dissolution_date, post_town], map: "idx_company_name_dissolution_date_post_town")
 }
 
 model company_officer_appointments {
@@ -120,6 +124,7 @@ model company_officer_appointments {
   resignation_date                                                                 DateTime?               @db.Date
   appointment_date_origin                                                          appointment_date_origin @relation(fields: [app_date_origin], references: [id], onDelete: NoAction, onUpdate: NoAction)
   appointment_type_company_officer_appointments_appointment_typeToappointment_type appointment_type        @relation("company_officer_appointments_appointment_typeToappointment_type", fields: [appointment_type], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  companies                                                                        companies               @relation(fields: [company_number], references: [company_number], onDelete: NoAction, onUpdate: NoAction)
   officers                                                                         officers                @relation(fields: [person_number], references: [person_number], onDelete: NoAction, onUpdate: NoAction)
 }
 
