@@ -1,0 +1,2 @@
+export const ALGOLIA_APP_ID="OJK44775M8"
+export const ALGOLIA_API_KEY="1b406d2aeade377967a6bcf9792472ab"
