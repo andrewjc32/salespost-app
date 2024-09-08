@@ -1,4 +1,3 @@
-import { liteClient as algoliasearch } from "algoliasearch/lite";
 import React, { useState, useRef } from 'react';
 import {
   useInstantSearch,

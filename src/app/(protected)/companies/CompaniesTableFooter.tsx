@@ -1,11 +1,9 @@
 import { Pagination, FlowbitePaginationTheme } from "flowbite-react";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
+import { usePagination, useInstantSearch } from 'react-instantsearch';
 
 type Props = {
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
   limit: number;
-  total: number;
 };
 
 const customTheme: FlowbitePaginationTheme = {
@@ -36,7 +34,26 @@ const customTheme: FlowbitePaginationTheme = {
   },
 };
 
-const CompaniesTableFooter = ({ page, setPage, limit, total }: Props) => {
+const CompaniesTableFooter = ({ limit }: Props) => {
+  const {
+    pages,
+    currentRefinement,
+    nbHits,
+    nbPages,
+    isFirstPage,
+    isLastPage,
+    canRefine,
+    refine,
+    createURL,
+  } = usePagination();
+
+  const { results } = useInstantSearch();
+  const total = results?.nbHits ?? 0;
+
+  const setPage = (newPage: number) => {
+    refine(newPage - 1);
+  };
+
   return (
     <nav
       className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
@@ -45,7 +62,7 @@ const CompaniesTableFooter = ({ page, setPage, limit, total }: Props) => {
       <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
         Showing{" "}
         <span className="font-semibold text-gray-900 dark:text-white">
-          {page * limit - limit + 1 + " - " + page * limit}
+        {currentRefinement * limit + 1} - {Math.min((currentRefinement + 1) * limit, total)}
         </span>{" "}
         of{" "}
         <span className="font-semibold text-gray-900 dark:text-white">
@@ -53,8 +70,8 @@ const CompaniesTableFooter = ({ page, setPage, limit, total }: Props) => {
         </span>
       </span>
       <Pagination
-        currentPage={page}
-        totalPages={Math.ceil(total / limit)}
+        currentPage={currentRefinement + 1}
+        totalPages={nbPages}
         onPageChange={setPage}
         theme={customTheme}
       />
