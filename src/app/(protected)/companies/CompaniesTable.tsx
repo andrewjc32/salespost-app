@@ -9,16 +9,9 @@ import SearchInput from "./SearchInput";
 import { searchClient } from "@/lib/searchClient";
 import { InstantSearch, Configure } from "react-instantsearch";
 
-type SortType = "asc" | "desc";
-
 const CompaniesTable = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-  const [sortConfig, setSortConfig] = useState<{
-    key: string;
-    direction: SortType;
-  }>({ key: "company_name", direction: "asc" });
-  const [loading, setLoading] = useState<boolean>(false);
 
   return (
     <section className="p-3 sm:p-5">
@@ -59,10 +52,7 @@ const CompaniesTable = () => {
                 className="w-full text-sm text-left text-gray-500 dark:text-gray-400"
                 hoverable
               >
-                <CompaniesTableHeader
-                  sortConfig={sortConfig}
-                  setSortConfig={setSortConfig}
-                />
+                <CompaniesTableHeader/>
                 <CompaniesTableBody />
               </Table>
             </div>

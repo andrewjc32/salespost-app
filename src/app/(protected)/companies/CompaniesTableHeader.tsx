@@ -1,51 +1,66 @@
 import { TableHead, TableHeadCell } from "flowbite-react";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { useState } from "react";
+import { useSortBy } from 'react-instantsearch';
 
 type SortType = "asc" | "desc";
 
-type SortConfig = {
-  key: string;
-  direction: SortType;
-};
+const CompaniesTableHeader = () => {
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: SortType;
+  }>({ key: "company_name", direction: "asc" });
+  const { currentRefinement, options, refine } = useSortBy({
+    items: [
+      { label: 'Company Name (asc)', value: 'companies_companyName_asc' },
+      { label: 'Company Name (desc)', value: 'companies_companyName_desc' },
+      { label: 'Registration Date (asc)', value: 'companies_registrationDate_asc' },
+      { label: 'Registration Date (desc)', value: 'companies_registrationDate_desc' },
+      { label: 'City (asc)', value: 'companies_postTown_asc' },
+      { label: 'City (desc)', value: 'companies_postTown_desc' },
+      { label: 'SIC (asc)', value: 'companies_sicText_asc' },
+      { label: 'SIC (desc)', value: 'companies_sicText_desc' },
+    ],
+  });
 
-type Props = {
-  sortConfig: SortConfig;
-  setSortConfig: Dispatch<SetStateAction<SortConfig>>;
-};
-
-const CompaniesTableHeader = ({ sortConfig, setSortConfig }: Props) => {
   const requestSort = (key: string) => {
     let direction: SortType = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
     }
+
     setSortConfig({ key, direction });
+
+    if(key == 'uri' || key == 'name')
+      return
+
+    let sortValue = key + direction;
+    refine(sortValue);
   };
 
   return (
     <TableHead>
       <TableHeadCell
         className="px-2 py-3"
-        onClick={() => requestSort("company_name")}
+        onClick={() => requestSort("companies_companyName_")}
       >
         COMPANY NAME{" "}
-        {sortConfig.key === "company_name" &&
+        {sortConfig.key === "companies_companyName_" &&
           (sortConfig.direction === "asc" ? "▲" : "▼")}
       </TableHeadCell>
       <TableHeadCell
         className="px-2 py-3"
-        onClick={() => requestSort("incorporation_date")}
+        onClick={() => requestSort("companies_registrationDate_")}
       >
         REGISTRATION DATE{" "}
-        {sortConfig.key === "incorporation_date" &&
+        {sortConfig.key === "companies_registrationDate_" &&
           (sortConfig.direction === "asc" ? "▲" : "▼")}
       </TableHeadCell>
       <TableHeadCell
         className="px-2 py-3"
-        onClick={() => requestSort("post_town")}
+        onClick={() => requestSort("companies_postTown_")}
       >
         CITY{" "}
-        {sortConfig.key === "post_town" &&
+        {sortConfig.key === "companies_postTown_" &&
           (sortConfig.direction === "asc" ? "▲" : "▼")}
       </TableHeadCell>
       <TableHeadCell className="px-2 py-3" onClick={() => requestSort("uri")}>
@@ -53,9 +68,9 @@ const CompaniesTableHeader = ({ sortConfig, setSortConfig }: Props) => {
         {sortConfig.key === "uri" &&
           (sortConfig.direction === "asc" ? "▲" : "▼")}
       </TableHeadCell>
-      <TableHeadCell className="px-2 py-3" onClick={() => requestSort("sic1")}>
+      <TableHeadCell className="px-2 py-3" onClick={() => requestSort("companies_sicText_")}>
         SIC (NATURE OF BUSINESS){" "}
-        {sortConfig.key === "sic1" &&
+        {sortConfig.key === "companies_sicText_" &&
           (sortConfig.direction === "asc" ? "▲" : "▼")}
       </TableHeadCell>
       <TableHeadCell className="px-2 py-3" onClick={() => requestSort("name")}>
