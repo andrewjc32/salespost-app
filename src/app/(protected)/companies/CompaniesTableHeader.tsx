@@ -11,7 +11,7 @@ const CompaniesTableHeader = () => {
   }>({ key: "company_name", direction: "asc" });
   const { currentRefinement, options, refine } = useSortBy({
     items: [
-      { label: 'Company Name (asc)', value: 'companies_companyName_asc' },
+      { label: 'Company Name (asc)', value: 'companies' },
       { label: 'Company Name (desc)', value: 'companies_companyName_desc' },
       { label: 'Registration Date (asc)', value: 'companies_registrationDate_asc' },
       { label: 'Registration Date (desc)', value: 'companies_registrationDate_desc' },
